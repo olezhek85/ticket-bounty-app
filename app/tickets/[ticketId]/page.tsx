@@ -9,9 +9,7 @@ type TicketPageProps = {
 const TicketPage = async ({ params }: TicketPageProps) => {
   const { ticketId } = await params;
 
-  const ticket = initialTickets.find(
-    (ticket) => ticket.id === parseInt(ticketId)
-  );
+  const ticket = initialTickets.find((ticket) => ticket.id === ticketId);
 
   if (!ticket) {
     return <div>Ticket not found</div>;
