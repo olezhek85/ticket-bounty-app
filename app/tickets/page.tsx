@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { initialTickets } from "@/data";
-import { ticketPath } from "@/path";
+import { ticketPath } from "@/paths";
 
 const TicketsPage = () => {
   return (
