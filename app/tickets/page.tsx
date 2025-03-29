@@ -13,7 +13,7 @@ const TicketsPage = () => {
         </p>
       </div>
 
-      <div className="flex-1 flex flex-col items-center gap-y-4">
+      <div className="flex-1 flex flex-col items-center gap-y-4 animate-[var(--animation-fade-from-top)]">
         {initialTickets.map((ticket) => (
           <div
             key={ticket.id}
