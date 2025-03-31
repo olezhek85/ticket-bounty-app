@@ -1,4 +1,3 @@
-import { Ticket } from "@/features/ticket/types";
 import { TicketItem } from "@/features/ticket/components/ticket-item";
 import { getTickets } from "@/features/ticket/queries/get-tickets";
 
