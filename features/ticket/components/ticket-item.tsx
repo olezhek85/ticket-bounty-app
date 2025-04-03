@@ -17,7 +17,6 @@ import {
 import { Button } from "@/components/ui/button";
 import clsx from "clsx";
 import { Ticket } from "@prisma/client";
-import { deleteTicket } from "@/features/ticket/actions/delete-ticket";
 import { toCurrencyFromCent } from "@/utils/currency";
 import { TicketMoreMenu } from "@/features/ticket/components/ticket-more-menu";
 
@@ -33,14 +32,6 @@ const TicketItem = ({ ticket, isDetail = false }: TicketItemProps) => {
         <LucideSquareArrowOutUpRight className="w-4 h-4" />
       </Link>
     </Button>
-  );
-
-  const deleteButton = (
-    <form action={deleteTicket.bind(null, ticket.id)}>
-      <Button variant="ghost" size="icon">
-        <LucideTrash className="w-4 h-4" />
-      </Button>
-    </form>
   );
 
   const editButton = (
@@ -96,7 +87,6 @@ const TicketItem = ({ ticket, isDetail = false }: TicketItemProps) => {
         {isDetail ? (
           <>
             {editButton}
-            {deleteButton}
             {moreMenu}
           </>
         ) : (

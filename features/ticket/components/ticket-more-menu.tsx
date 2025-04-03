@@ -14,6 +14,8 @@ import { LucideTrash } from "lucide-react";
 import { TICKET_STATUS_LABELS } from "@/features/ticket/constants";
 import { updateTicketStatus } from "@/features/ticket/actions/update-ticket-status";
 import { toast } from "sonner";
+import { deleteTicket } from "@/features/ticket/actions/delete-ticket";
+import { useConfirmDialog } from "@/components/confirm-dialog";
 
 type TicketMoreMenuProps = {
   ticket: Ticket;
@@ -21,6 +23,16 @@ type TicketMoreMenuProps = {
 };
 
 const TicketMoreMenu = ({ ticket, trigger }: TicketMoreMenuProps) => {
+  const [deleteButton, deleteDialog] = useConfirmDialog({
+    action: deleteTicket.bind(null, ticket.id),
+    trigger: (
+      <DropdownMenuItem>
+        <LucideTrash className="mr-2 h-4 w-4" />
+        <span>Delete</span>
+      </DropdownMenuItem>
+    ),
+  });
+
   const handleUpdateTicketStatus = async (status: string) => {
     const promise = updateTicketStatus(ticket.id, status as TicketStatus);
 
@@ -37,13 +49,6 @@ const TicketMoreMenu = ({ ticket, trigger }: TicketMoreMenuProps) => {
     }
   };
 
-  const deleteButton = (
-    <DropdownMenuItem>
-      <LucideTrash className="mr-2 h-4 w-4" />
-      <span>Delete</span>
-    </DropdownMenuItem>
-  );
-
   const ticketStatusRadioGroupItems = (
     <DropdownMenuRadioGroup
       value={ticket.status}
@@ -58,14 +63,17 @@ const TicketMoreMenu = ({ ticket, trigger }: TicketMoreMenuProps) => {
   );
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
-      <DropdownMenuContent side="right" className="w-56">
-        {ticketStatusRadioGroupItems}
-        <DropdownMenuSeparator />
-        {deleteButton}
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      {deleteDialog}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
+        <DropdownMenuContent side="right" className="w-56">
+          {ticketStatusRadioGroupItems}
+          <DropdownMenuSeparator />
+          {deleteButton}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
   );
 };
 
