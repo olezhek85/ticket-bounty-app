@@ -3,3 +3,7 @@ export const ticketsPath = () => "/tickets";
 export const ticketPath = (ticketId: string) => `${ticketsPath()}/${ticketId}`;
 export const ticketEditPath = (ticketId: string) =>
   `${ticketPath(ticketId)}/edit`;
+
+export const signUpPath = () => "/sign-up";
+export const signInPath = () => "/sign-in";
+export const forgotPasswordPath = () => "/forgot-password";
