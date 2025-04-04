@@ -15,11 +15,21 @@ const SignInForm = () => {
   return (
     <Form action={action} actionState={actionState}>
       <Label htmlFor="email">Email</Label>
-      <Input name="email" type="email" />
+      <Input
+        name="email"
+        type="email"
+        defaultValue={actionState.payload?.get("email") as string}
+        placeholder="john.doe@example.com"
+      />
       <FieldError actionState={actionState} name="email" />
 
       <Label htmlFor="password">Password</Label>
-      <Input name="password" type="password" />
+      <Input
+        name="password"
+        type="password"
+        defaultValue={actionState.payload?.get("password") as string}
+        placeholder="********"
+      />
       <FieldError actionState={actionState} name="password" />
 
       <SubmitButton label="Sign In" />

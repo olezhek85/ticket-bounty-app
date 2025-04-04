@@ -3,15 +3,12 @@
 import {
   ActionState,
   fromErrorToActionState,
+  toActionState,
 } from "@/components/form/utils/to-action-state";
-import { ticketsPath } from "@/paths";
-import { redirect } from "next/navigation";
-import { z } from "zod";
-
-const signInSchema = z.object({
-  email: z.string().min(1, { message: "Is required" }).max(191).email(),
-  password: z.string().min(6).max(191),
-});
+import { DEFAULT_LOGIN_REDIRECT } from "@/paths";
+import { signInSchema } from "../schemas";
+import { signIn as signInAction } from "@/lib/auth/auth";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
 
 export const signIn = async (_actionState: ActionState, formData: FormData) => {
   try {
@@ -19,10 +16,18 @@ export const signIn = async (_actionState: ActionState, formData: FormData) => {
       Object.fromEntries(formData)
     );
 
-    // TODO: Implement sign in
-  } catch (error) {
-    return fromErrorToActionState(error);
-  }
+    await signInAction("credentials", {
+      email,
+      password,
+      redirectTo: DEFAULT_LOGIN_REDIRECT,
+    });
 
-  redirect(ticketsPath());
+    return toActionState("SUCCESS", "Signed in successfully", formData);
+  } catch (error) {
+    if (isRedirectError(error)) {
+      throw error;
+    }
+
+    return fromErrorToActionState(error, formData);
+  }
 };

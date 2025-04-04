@@ -1,3 +1,4 @@
+import { AuthError } from "next-auth";
 import { z } from "zod";
 
 export type ActionState = {
@@ -26,6 +27,25 @@ export const fromErrorToActionState = (
       payload: formData,
       timestamp: Date.now(),
     };
+  } else if (error instanceof AuthError) {
+    switch (error.type) {
+      case "CredentialsSignin":
+        return {
+          status: "ERROR",
+          message: "Invalid email or password",
+          fieldErrors: {},
+          payload: formData,
+          timestamp: Date.now(),
+        };
+      default:
+        return {
+          status: "ERROR",
+          message: "An unknown error occurred",
+          fieldErrors: {},
+          payload: formData,
+          timestamp: Date.now(),
+        };
+    }
   } else if (error instanceof Error) {
     return {
       status: "ERROR",
@@ -47,12 +67,13 @@ export const fromErrorToActionState = (
 
 export const toActionState = (
   status: ActionState["status"],
-  message: string
+  message: string,
+  formData?: FormData
 ): ActionState => {
   return {
     status,
     message,
-    fieldErrors: {},
+    payload: formData,
     timestamp: Date.now(),
   };
 };
