@@ -22,7 +22,11 @@ import { TicketMoreMenu } from "@/features/ticket/components/ticket-more-menu";
 type TicketItemProps = {
   ticket: Prisma.TicketGetPayload<{
     include: {
-      user: true;
+      user: {
+        select: {
+          name: true;
+        };
+      };
     };
   }>;
   isDetail?: boolean;
