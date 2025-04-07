@@ -1,6 +1,22 @@
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
+
+const users = [
+  {
+    name: "1@gmail.com",
+    email: "1@gmail.com",
+  },
+  {
+    name: "JohnDoe",
+    email: "john.doe@example.com",
+  },
+  {
+    name: "JaneDoe",
+    email: "jane.doe@example.com",
+  },
+];
 
 const tickets = [
   {
@@ -31,9 +47,20 @@ const seed = async () => {
   console.log("DB Seed: Started...");
 
   await prisma.ticket.deleteMany();
+  await prisma.user.deleteMany();
+
+  const dbUsers = await prisma.user.createManyAndReturn({
+    data: users.map((user) => ({
+      ...user,
+      password: bcrypt.hashSync(user.email, 10),
+    })),
+  });
 
   await prisma.ticket.createMany({
-    data: tickets,
+    data: tickets.map((ticket) => ({
+      ...ticket,
+      userId: dbUsers[0].id,
+    })),
   });
 
   const t1 = performance.now();
