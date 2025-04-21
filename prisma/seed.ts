@@ -59,7 +59,7 @@ const seed = async () => {
   await prisma.ticket.createMany({
     data: tickets.map((ticket) => ({
       ...ticket,
-      userId: dbUsers[0].id,
+      userId: dbUsers[Math.floor(Math.random() * dbUsers.length)].id,
     })),
   });
 
