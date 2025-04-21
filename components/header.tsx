@@ -1,14 +1,16 @@
+"use client";
+
 import { LucideKanban, LucideLogOut } from "lucide-react";
 import Link from "next/link";
+import { SessionProvider, useSession } from "next-auth/react";
 import { SubmitButton } from "@/components/form/submit-button";
 import { ThemeSwitcher } from "@/components/theme/theme-switcher";
 import { buttonVariants } from "@/components/ui/button";
 import { signOut } from "@/features/auth/actions/sign-out";
-import { auth } from "@/lib/auth/auth";
 import { homePath, signInPath, signUpPath, ticketsPath } from "@/paths";
 
-const Header = async () => {
-  const session = await auth();
+const AuthenticatedHeader = () => {
+  const { data: session } = useSession();
 
   const navItems = session ? (
     <>
@@ -57,5 +59,11 @@ const Header = async () => {
     </nav>
   );
 };
+
+const Header = () => (
+  <SessionProvider>
+    <AuthenticatedHeader />
+  </SessionProvider>
+);
 
 export { Header };
