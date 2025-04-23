@@ -7,23 +7,15 @@ import { SubmitButton } from "@/components/form/submit-button";
 import { ThemeSwitcher } from "@/components/theme/theme-switcher";
 import { buttonVariants } from "@/components/ui/button";
 import { signOut } from "@/features/auth/actions/sign-out";
-import { homePath, signInPath, signUpPath, ticketsPath } from "@/paths";
+import { homePath, signInPath, signUpPath } from "@/paths";
 
 const AuthenticatedHeader = () => {
   const { data: session } = useSession();
 
   const navItems = session ? (
-    <>
-      <Link
-        href={ticketsPath()}
-        className={buttonVariants({ variant: "default" })}
-      >
-        Tickets
-      </Link>
-      <form action={signOut}>
-        <SubmitButton label="Sign Out" icon={<LucideLogOut />} />
-      </form>
-    </>
+    <form action={signOut}>
+      <SubmitButton label="Sign Out" icon={<LucideLogOut />} />
+    </form>
   ) : (
     <>
       <Link
