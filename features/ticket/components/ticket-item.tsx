@@ -18,6 +18,8 @@ import clsx from "clsx";
 import { Prisma } from "@prisma/client";
 import { toCurrencyFromCent } from "@/utils/currency";
 import { TicketMoreMenu } from "@/features/ticket/components/ticket-more-menu";
+import { auth } from "@/lib/auth/auth";
+import { isOwner } from "@/features/auth/utils/is-owner";
 
 type TicketItemProps = {
   ticket: Prisma.TicketGetPayload<{
@@ -32,7 +34,10 @@ type TicketItemProps = {
   isDetail?: boolean;
 };
 
-const TicketItem = ({ ticket, isDetail = false }: TicketItemProps) => {
+const TicketItem = async ({ ticket, isDetail = false }: TicketItemProps) => {
+  const session = await auth();
+  const isTicketOwner = isOwner(session, ticket);
+
   const detailButton = (
     <Button asChild variant="ghost">
       <Link prefetch href={ticketPath(ticket.id)}>
@@ -41,15 +46,15 @@ const TicketItem = ({ ticket, isDetail = false }: TicketItemProps) => {
     </Button>
   );
 
-  const editButton = (
+  const editButton = isTicketOwner ? (
     <Button asChild variant="ghost">
       <Link prefetch href={ticketEditPath(ticket.id)}>
         <LucidePencil className="w-4 h-4" />
       </Link>
     </Button>
-  );
+  ) : null;
 
-  const moreMenu = (
+  const moreMenu = isTicketOwner ? (
     <TicketMoreMenu
       ticket={ticket}
       trigger={
@@ -58,7 +63,7 @@ const TicketItem = ({ ticket, isDetail = false }: TicketItemProps) => {
         </Button>
       }
     />
-  );
+  ) : null;
 
   return (
     <div
