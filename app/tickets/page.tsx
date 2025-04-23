@@ -6,11 +6,14 @@ import { Placeholder } from "@/components/placeholder";
 import { Spinner } from "@/components/spinner";
 import { TicketList } from "@/features/ticket/components/ticket-list";
 import { TicketUpsertForm } from "@/features/ticket/components/ticket-upsert-form";
+import { auth } from "@/lib/auth/auth";
 
-const TicketsPage = () => {
+const TicketsPage = async () => {
+  const session = await auth();
+
   return (
     <div className="flex-1 flex flex-col gap-y-8">
-      <Heading title="Tickets" description="All your tickets at one place" />
+      <Heading title="My tickets" description="All your tickets at one place" />
 
       <CardCompact
         title="Create Ticket"
@@ -21,7 +24,7 @@ const TicketsPage = () => {
 
       <ErrorBoundary fallback={<Placeholder label="Something went wrong" />}>
         <Suspense fallback={<Spinner />}>
-          <TicketList />
+          <TicketList userId={session?.user?.id} />
         </Suspense>
       </ErrorBoundary>
     </div>
