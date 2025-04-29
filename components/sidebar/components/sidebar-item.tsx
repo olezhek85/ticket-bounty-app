@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { cloneElement } from "react";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -12,12 +11,10 @@ import { NavItem } from "../types";
 type SidebarItemProps = {
   isOpen: boolean;
   navItem: NavItem;
+  isActive: boolean;
 };
 
-const SidebarItem = ({ isOpen, navItem }: SidebarItemProps) => {
-  const path = usePathname();
-  const isActive = path === navItem.href;
-
+const SidebarItem = ({ isOpen, navItem, isActive }: SidebarItemProps) => {
   return (
     <>
       {navItem.separator && <Separator />}
