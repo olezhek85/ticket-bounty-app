@@ -4,11 +4,16 @@ import { CardCompact } from "@/components/card-compact";
 import { Heading } from "@/components/heading";
 import { Placeholder } from "@/components/placeholder";
 import { Spinner } from "@/components/spinner";
+import { SearchParams } from "@/features/search-params";
 import { TicketList } from "@/features/ticket/components/ticket-list";
 import { TicketUpsertForm } from "@/features/ticket/components/ticket-upsert-form";
 import { auth } from "@/lib/auth/auth";
 
-const TicketsPage = async () => {
+type TicketsPageProps = {
+  searchParams: Promise<SearchParams>;
+};
+
+const TicketsPage = async ({ searchParams }: TicketsPageProps) => {
   const session = await auth();
 
   return (
@@ -24,7 +29,10 @@ const TicketsPage = async () => {
 
       <ErrorBoundary fallback={<Placeholder label="Something went wrong" />}>
         <Suspense fallback={<Spinner />}>
-          <TicketList userId={session?.user?.id} />
+          <TicketList
+            userId={session?.user?.id}
+            searchParams={await searchParams}
+          />
         </Suspense>
       </ErrorBoundary>
     </div>

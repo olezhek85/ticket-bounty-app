@@ -3,9 +3,14 @@ import { ErrorBoundary } from "react-error-boundary";
 import { Heading } from "@/components/heading";
 import { Placeholder } from "@/components/placeholder";
 import { Spinner } from "@/components/spinner";
+import { SearchParams } from "@/features/search-params";
 import { TicketList } from "@/features/ticket/components/ticket-list";
 
-const HomePage = () => {
+type HomePageProps = {
+  searchParams: Promise<SearchParams>;
+};
+
+const HomePage = async ({ searchParams }: HomePageProps) => {
   return (
     <div className="flex-1 flex flex-col gap-y-8">
       <Heading
@@ -15,7 +20,7 @@ const HomePage = () => {
 
       <ErrorBoundary fallback={<Placeholder label="Something went wrong" />}>
         <Suspense fallback={<Spinner />}>
-          <TicketList />
+          <TicketList searchParams={await searchParams} />
         </Suspense>
       </ErrorBoundary>
     </div>
