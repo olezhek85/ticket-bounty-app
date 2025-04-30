@@ -1,21 +1,18 @@
 "use client";
 
-import { LucideKanban, LucideLogOut } from "lucide-react";
+import { LucideKanban } from "lucide-react";
 import Link from "next/link";
 import { SessionProvider, useSession } from "next-auth/react";
-import { SubmitButton } from "@/components/form/submit-button";
+import { AccountDropdown } from "@/components/account-dropdown";
 import { ThemeSwitcher } from "@/components/theme/theme-switcher";
 import { buttonVariants } from "@/components/ui/button";
-import { signOut } from "@/features/auth/actions/sign-out";
 import { homePath, signInPath, signUpPath } from "@/paths";
 
 const AuthenticatedHeader = () => {
   const { data: session } = useSession();
 
   const navItems = session ? (
-    <form action={signOut}>
-      <SubmitButton label="Sign Out" icon={<LucideLogOut />} />
-    </form>
+    <AccountDropdown session={session} />
   ) : (
     <>
       <Link
