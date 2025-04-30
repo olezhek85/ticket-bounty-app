@@ -3,10 +3,10 @@
 import { LucideKanban } from "lucide-react";
 import Link from "next/link";
 import { SessionProvider, useSession } from "next-auth/react";
-import { AccountDropdown } from "@/components/account-dropdown";
 import { ThemeSwitcher } from "@/components/theme/theme-switcher";
 import { buttonVariants } from "@/components/ui/button";
 import { homePath, signInPath, signUpPath } from "@/paths";
+import { AccountDropdown } from "./account-dropdown";
 
 const AuthenticatedHeader = () => {
   const { data: session } = useSession();
