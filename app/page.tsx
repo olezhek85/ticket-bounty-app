@@ -1,9 +1,10 @@
+import type { SearchParams } from "nuqs/server";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { Heading } from "@/components/heading";
 import { Placeholder } from "@/components/placeholder";
 import { Spinner } from "@/components/spinner";
-import { SearchParams } from "@/features/search-params";
+import { searchParamsCache } from "@/features/search-params";
 import { TicketList } from "@/features/ticket/components/ticket-list";
 
 type HomePageProps = {
@@ -20,7 +21,9 @@ const HomePage = async ({ searchParams }: HomePageProps) => {
 
       <ErrorBoundary fallback={<Placeholder label="Something went wrong" />}>
         <Suspense fallback={<Spinner />}>
-          <TicketList searchParams={await searchParams} />
+          <TicketList
+            searchParams={await searchParamsCache.parse(searchParams)}
+          />
         </Suspense>
       </ErrorBoundary>
     </div>

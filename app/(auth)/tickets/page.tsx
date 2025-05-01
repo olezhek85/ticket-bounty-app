@@ -1,10 +1,11 @@
+import type { SearchParams } from "nuqs/server";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { CardCompact } from "@/components/card-compact";
 import { Heading } from "@/components/heading";
 import { Placeholder } from "@/components/placeholder";
 import { Spinner } from "@/components/spinner";
-import { SearchParams } from "@/features/search-params";
+import { searchParamsCache } from "@/features/search-params";
 import { TicketList } from "@/features/ticket/components/ticket-list";
 import { TicketUpsertForm } from "@/features/ticket/components/ticket-upsert-form";
 import { auth } from "@/lib/auth/auth";
@@ -31,7 +32,7 @@ const TicketsPage = async ({ searchParams }: TicketsPageProps) => {
         <Suspense fallback={<Spinner />}>
           <TicketList
             userId={session?.user?.id}
-            searchParams={await searchParams}
+            searchParams={await searchParamsCache.parse(searchParams)}
           />
         </Suspense>
       </ErrorBoundary>
