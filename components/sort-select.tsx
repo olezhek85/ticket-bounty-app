@@ -1,7 +1,7 @@
 "use client";
 
-import { useQueryState } from "nuqs";
-import { sortParser } from "@/features/search-params";
+import { useQueryStates } from "nuqs";
+import { sortOptions, sortParser } from "@/features/search-params";
 import {
   Select,
   SelectContent,
@@ -14,7 +14,8 @@ import {
 
 type Option = {
   label: string;
-  value: string;
+  sortKey: string;
+  sortValue: string;
 };
 
 type SortSelectProps = {
@@ -22,14 +23,22 @@ type SortSelectProps = {
 };
 
 const SortSelect = ({ options }: SortSelectProps) => {
-  const [sort, setSort] = useQueryState("sort", sortParser);
+  const [sort, setSort] = useQueryStates(sortParser, sortOptions);
 
-  const handleSort = (value: string) => {
-    setSort(value);
+  const handleSort = (compositeKey: string) => {
+    const [sortKey, sortValue] = compositeKey.split("_");
+
+    setSort({
+      sortKey,
+      sortValue,
+    });
   };
 
   return (
-    <Select onValueChange={handleSort} defaultValue={sort}>
+    <Select
+      onValueChange={handleSort}
+      defaultValue={sort.sortKey + "_" + sort.sortValue}
+    >
       <SelectTrigger>
         <SelectValue />
       </SelectTrigger>
@@ -37,7 +46,10 @@ const SortSelect = ({ options }: SortSelectProps) => {
         <SelectGroup>
           <SelectLabel>Sort</SelectLabel>
           {options.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
+            <SelectItem
+              key={option.sortKey + option.sortValue}
+              value={option.sortKey + "_" + option.sortValue}
+            >
               {option.label}
             </SelectItem>
           ))}
