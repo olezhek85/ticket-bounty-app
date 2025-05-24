@@ -12,7 +12,10 @@ type TicketListProps = {
 };
 
 const TicketList = async ({ userId, searchParams }: TicketListProps) => {
-  const tickets = await getTickets(userId, searchParams);
+  const { list: tickets, metadata: ticketMetadata } = await getTickets(
+    userId,
+    searchParams
+  );
 
   return (
     <div className="flex-1 flex flex-col items-center gap-y-4 animate-[var(--animation-fade-from-top)]">
@@ -20,9 +23,21 @@ const TicketList = async ({ userId, searchParams }: TicketListProps) => {
         <TicketSearchInput placeholder="Search tickets..." />
         <TicketSortSelect
           options={[
-            { sortKey: "createdAt", sortValue: "desc", label: "Newest" },
-            { sortKey: "createdAt", sortValue: "asc", label: "Oldest" },
-            { sortKey: "bounty", sortValue: "desc", label: "Bounty" },
+            {
+              sortKey: "createdAt",
+              sortValue: "desc",
+              label: "Newest",
+            },
+            {
+              sortKey: "createdAt",
+              sortValue: "asc",
+              label: "Oldest",
+            },
+            {
+              sortKey: "bounty",
+              sortValue: "desc",
+              label: "Bounty",
+            },
           ]}
         />
       </div>
@@ -34,7 +49,7 @@ const TicketList = async ({ userId, searchParams }: TicketListProps) => {
       )}
 
       <div className="w-full max-w-[420px]">
-        <TicketPagination />
+        <TicketPagination paginatedTicketMetadata={ticketMetadata} />
       </div>
     </div>
   );

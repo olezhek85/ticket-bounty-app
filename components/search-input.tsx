@@ -6,15 +6,11 @@ import { Input } from "./ui/input";
 type SearchInputProps = {
   value: string;
   onChange: (value: string) => void;
-  placeholder?: string;
+  placeholder: string;
 };
 
-const SearchInput = ({
-  value,
-  onChange,
-  placeholder = "Search...",
-}: SearchInputProps) => {
-  const handleChange = useDebouncedCallback(
+const SearchInput = ({ value, onChange, placeholder }: SearchInputProps) => {
+  const handleSearch = useDebouncedCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       onChange(e.target.value);
     },
@@ -22,7 +18,11 @@ const SearchInput = ({
   );
 
   return (
-    <Input value={value} placeholder={placeholder} onChange={handleChange} />
+    <Input
+      defaultValue={value}
+      placeholder={placeholder}
+      onChange={handleSearch}
+    />
   );
 };
 
