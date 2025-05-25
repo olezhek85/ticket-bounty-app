@@ -21,31 +21,38 @@ const users = [
 const tickets = [
   {
     title: "Ticket 1",
-    content: "This is the first ticket from the database",
+    content: "First ticket from the DB.",
     status: "DONE" as const,
-    deadline: "2025-12-31",
-    bounty: 100,
+    deadline: new Date().toISOString().split("T")[0],
+    bounty: 499,
   },
   {
     title: "Ticket 2",
-    content: "This is the second ticket from the database",
+    content: "Second ticket from the DB.",
     status: "OPEN" as const,
-    deadline: "2025-12-31",
-    bounty: 100,
+    deadline: new Date().toISOString().split("T")[0],
+    bounty: 399,
   },
   {
     title: "Ticket 3",
-    content: "This is the third ticket from the database",
+    content: "Third ticket from the DB.",
     status: "IN_PROGRESS" as const,
-    deadline: "2025-12-31",
-    bounty: 100,
+    deadline: new Date().toISOString().split("T")[0],
+    bounty: 599,
   },
+];
+
+const comments = [
+  { content: "First comment from the DB." },
+  { content: "Second comment from the DB." },
+  { content: "Third comment from the DB." },
 ];
 
 const seed = async () => {
   const t0 = performance.now();
   console.log("DB Seed: Started...");
 
+  await prisma.comment.deleteMany();
   await prisma.user.deleteMany();
   await prisma.ticket.deleteMany();
 
@@ -56,10 +63,18 @@ const seed = async () => {
     })),
   });
 
-  await prisma.ticket.createMany({
+  const dbTickets = await prisma.ticket.createManyAndReturn({
     data: tickets.map((ticket) => ({
       ...ticket,
       userId: dbUsers[Math.floor(Math.random() * dbUsers.length)].id,
+    })),
+  });
+
+  await prisma.comment.createMany({
+    data: comments.map((comment) => ({
+      ...comment,
+      userId: dbUsers[0].id,
+      ticketId: dbTickets[0].id,
     })),
   });
 
