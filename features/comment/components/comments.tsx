@@ -1,17 +1,17 @@
-import { getComments } from "@/features/comment/queries/get-comments";
 import { CommentItem } from "@/features/comment/components/comment-item";
 import { CardCompact } from "@/components/card-compact";
 import { CommentCreateForm } from "@/features/comment/components/comment-create-form";
 import { CommentDeleteButton } from "./comment-delete-button";
 import { getAuthRedirect } from "@/features/auth/queries/get-auth-redirect";
 import { isOwner } from "@/features/auth/utils/is-owner";
+import { CommentWithMetadata } from "@/features/comment/types";
 
 type CommentsProps = {
   ticketId: string;
+  comments?: CommentWithMetadata[];
 };
 
-const Comments = async ({ ticketId }: CommentsProps) => {
-  const comments = await getComments(ticketId);
+const Comments = async ({ ticketId, comments = [] }: CommentsProps) => {
   const session = await getAuthRedirect();
 
   return (

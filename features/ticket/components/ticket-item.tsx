@@ -21,9 +21,7 @@ import { TicketMoreMenu } from "@/features/ticket/components/ticket-more-menu";
 import { auth } from "@/lib/auth/auth";
 import { isOwner } from "@/features/auth/utils/is-owner";
 import { Comments } from "@/features/comment/components/comments";
-import { Suspense } from "react";
-import { Spinner } from "@/components/spinner";
-import { Skeleton } from "@/components/ui/skeleton";
+import { CommentWithMetadata } from "@/features/comment/types";
 
 type TicketItemProps = {
   ticket: Prisma.TicketGetPayload<{
@@ -36,9 +34,14 @@ type TicketItemProps = {
     };
   }>;
   isDetail?: boolean;
+  comments?: CommentWithMetadata[];
 };
 
-const TicketItem = async ({ ticket, isDetail = false }: TicketItemProps) => {
+const TicketItem = async ({
+  ticket,
+  isDetail = false,
+  comments,
+}: TicketItemProps) => {
   const session = await auth();
   const isTicketOwner = isOwner(session, ticket);
 
@@ -116,19 +119,7 @@ const TicketItem = async ({ ticket, isDetail = false }: TicketItemProps) => {
           )}
         </div>
       </div>
-      {isDetail ? (
-        <Suspense
-          fallback={
-            <div className="flex flex-col gap-y-4">
-              <Skeleton className="h-[225px] w-full" />
-              <Skeleton className="h-[80px] ml-8" />
-              <Skeleton className="h-[80px] ml-8" />
-            </div>
-          }
-        >
-          <Comments ticketId={ticket.id} />
-        </Suspense>
-      ) : null}
+      {isDetail ? <Comments ticketId={ticket.id} comments={comments} /> : null}
     </div>
   );
 };
