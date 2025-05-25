@@ -21,6 +21,9 @@ import { TicketMoreMenu } from "@/features/ticket/components/ticket-more-menu";
 import { auth } from "@/lib/auth/auth";
 import { isOwner } from "@/features/auth/utils/is-owner";
 import { Comments } from "@/features/comment/components/comments";
+import { Suspense } from "react";
+import { Spinner } from "@/components/spinner";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type TicketItemProps = {
   ticket: Prisma.TicketGetPayload<{
@@ -113,7 +116,19 @@ const TicketItem = async ({ ticket, isDetail = false }: TicketItemProps) => {
           )}
         </div>
       </div>
-      {isDetail ? <Comments ticketId={ticket.id} /> : null}
+      {isDetail ? (
+        <Suspense
+          fallback={
+            <div className="flex flex-col gap-y-4">
+              <Skeleton className="h-[225px] w-full" />
+              <Skeleton className="h-[80px] ml-8" />
+              <Skeleton className="h-[80px] ml-8" />
+            </div>
+          }
+        >
+          <Comments ticketId={ticket.id} />
+        </Suspense>
+      ) : null}
     </div>
   );
 };
