@@ -1,9 +1,9 @@
+"use client";
+
 import { CommentItem } from "@/features/comment/components/comment-item";
 import { CardCompact } from "@/components/card-compact";
 import { CommentCreateForm } from "@/features/comment/components/comment-create-form";
 import { CommentDeleteButton } from "./comment-delete-button";
-import { getAuthRedirect } from "@/features/auth/queries/get-auth-redirect";
-import { isOwner } from "@/features/auth/utils/is-owner";
 import { CommentWithMetadata } from "@/features/comment/types";
 
 type CommentsProps = {
@@ -11,9 +11,7 @@ type CommentsProps = {
   comments?: CommentWithMetadata[];
 };
 
-const Comments = async ({ ticketId, comments = [] }: CommentsProps) => {
-  const session = await getAuthRedirect();
-
+const Comments = ({ ticketId, comments = [] }: CommentsProps) => {
   return (
     <>
       <CardCompact
@@ -28,7 +26,7 @@ const Comments = async ({ ticketId, comments = [] }: CommentsProps) => {
             key={comment.id}
             comment={comment}
             buttons={[
-              ...(isOwner(session, comment)
+              ...(comment.isOwner
                 ? [<CommentDeleteButton key="0" id={comment.id} />]
                 : []),
             ]}

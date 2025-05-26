@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Card,
   CardContent,
@@ -18,8 +20,6 @@ import clsx from "clsx";
 import { Prisma } from "@prisma/client";
 import { toCurrencyFromCent } from "@/utils/currency";
 import { TicketMoreMenu } from "@/features/ticket/components/ticket-more-menu";
-import { auth } from "@/lib/auth/auth";
-import { isOwner } from "@/features/auth/utils/is-owner";
 import { Comments } from "@/features/comment/components/comments";
 import { CommentWithMetadata } from "@/features/comment/types";
 
@@ -32,19 +32,16 @@ type TicketItemProps = {
         };
       };
     };
-  }>;
+  }> & { isOwner: boolean };
   isDetail?: boolean;
   comments?: CommentWithMetadata[];
 };
 
-const TicketItem = async ({
+const TicketItem = ({
   ticket,
   isDetail = false,
   comments,
 }: TicketItemProps) => {
-  const session = await auth();
-  const isTicketOwner = isOwner(session, ticket);
-
   const detailButton = (
     <Button asChild variant="ghost">
       <Link prefetch href={ticketPath(ticket.id)}>
@@ -53,7 +50,7 @@ const TicketItem = async ({
     </Button>
   );
 
-  const editButton = isTicketOwner ? (
+  const editButton = ticket.isOwner ? (
     <Button asChild variant="ghost">
       <Link prefetch href={ticketEditPath(ticket.id)}>
         <LucidePencil className="w-4 h-4" />
@@ -61,7 +58,7 @@ const TicketItem = async ({
     </Button>
   ) : null;
 
-  const moreMenu = isTicketOwner ? (
+  const moreMenu = ticket.isOwner ? (
     <TicketMoreMenu
       ticket={ticket}
       trigger={
