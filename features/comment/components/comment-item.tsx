@@ -13,7 +13,7 @@ const CommentItem = ({ comment, buttons }: CommentItemProps) => {
       <Card className="p-4 flex-1 flex flex-col gap-y-1">
         <div className="flex justify-between">
           <p className="text-sm text-muted-foreground">
-            ß{comment.user?.name ?? "Deleted User"}
+            {comment.user?.name ?? "Deleted User"}
           </p>
           <p className="text-sm text-muted-foreground">
             {format(comment.createdAt, "yyyy-MM-dd, HH:mm")}
