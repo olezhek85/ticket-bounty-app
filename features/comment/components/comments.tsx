@@ -32,6 +32,12 @@ const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
     setMetadata(morePaginatedComments.metadata);
   };
 
+  const handleDeleteComment = (id: string) => {
+    setComments((prevComments) =>
+      prevComments.filter((comment) => comment.id !== id)
+    );
+  };
+
   return (
     <>
       <CardCompact
@@ -47,7 +53,13 @@ const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
             comment={comment}
             buttons={[
               ...(comment.isOwner
-                ? [<CommentDeleteButton key="0" id={comment.id} />]
+                ? [
+                    <CommentDeleteButton
+                      key="0"
+                      id={comment.id}
+                      onDeleteComment={handleDeleteComment}
+                    />,
+                  ]
                 : []),
             ]}
           />
