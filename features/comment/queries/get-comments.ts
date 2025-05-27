@@ -1,28 +1,48 @@
+"use server";
+
 import { isOwner } from "@/features/auth/utils/is-owner";
 import { auth } from "@/lib/auth/auth";
 import { prisma } from "@/lib/prisma";
 
-export const getComments = async (ticketId: string) => {
+export const getComments = async (ticketId: string, offset?: number) => {
   const session = await auth();
 
-  const comments = await prisma.comment.findMany({
-    where: {
-      ticketId,
-    },
-    include: {
-      user: {
-        select: {
-          name: true,
+  const where = {
+    ticketId,
+  };
+
+  const skip = offset ?? 0;
+  const take = 2;
+
+  const [comments, count] = await prisma.$transaction([
+    prisma.comment.findMany({
+      where,
+      skip,
+      take,
+      include: {
+        user: {
+          select: {
+            name: true,
+          },
         },
       },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+      orderBy: {
+        createdAt: "desc",
+      },
+    }),
+    prisma.comment.count({
+      where,
+    }),
+  ]);
 
-  return comments.map((comment) => ({
-    ...comment,
-    isOwner: isOwner(session, comment),
-  }));
+  return {
+    list: comments.map((comment) => ({
+      ...comment,
+      isOwner: isOwner(session, comment),
+    })),
+    metadata: {
+      count,
+      hasNextPage: count > skip + take,
+    },
+  };
 };
