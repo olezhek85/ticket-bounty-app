@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Card,
   CardContent,
@@ -20,8 +18,6 @@ import clsx from "clsx";
 import { Prisma } from "@prisma/client";
 import { toCurrencyFromCent } from "@/utils/currency";
 import { TicketMoreMenu } from "@/features/ticket/components/ticket-more-menu";
-import { Comments } from "@/features/comment/components/comments";
-import { CommentWithMetadata } from "@/features/comment/types";
 
 type TicketItemProps = {
   ticket: Prisma.TicketGetPayload<{
@@ -34,7 +30,7 @@ type TicketItemProps = {
     };
   }> & { isOwner: boolean };
   isDetail?: boolean;
-  comments?: CommentWithMetadata[];
+  comments?: React.ReactNode;
 };
 
 const TicketItem = ({
@@ -116,7 +112,7 @@ const TicketItem = ({
           )}
         </div>
       </div>
-      {isDetail ? <Comments ticketId={ticket.id} comments={comments} /> : null}
+      {comments}
     </div>
   );
 };
