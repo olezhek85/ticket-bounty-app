@@ -1,13 +1,14 @@
 import { AuthError } from "next-auth";
 import { z } from "zod";
 
-export type ActionState = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ActionState<T = any> = {
   status?: "SUCCESS" | "ERROR";
   message: string;
   fieldErrors?: Record<string, string[] | undefined>;
   payload?: FormData;
   timestamp: number;
-  data?: unknown;
+  data?: T;
 };
 
 export const EMPTY_ACTION_STATE: ActionState = {
