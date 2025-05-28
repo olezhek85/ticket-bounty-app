@@ -24,6 +24,7 @@
     "@radix-ui/react-separator": "^1.1.2",
     "@radix-ui/react-slot": "^1.1.2",
     "@radix-ui/react-tabs": "^1.1.9",
+    "@tanstack/react-query": "^5.77.2",
     "bcryptjs": "^3.0.2",
     "big.js": "^6.2.2",
     "class-variance-authority": "^0.7.1",
@@ -48,6 +49,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@tanstack/eslint-plugin-query": "^5.78.0",
     "@types/big.js": "^6.2.2",
     "@types/node": "^20",
     "@types/react": "^19",
