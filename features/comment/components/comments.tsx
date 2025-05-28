@@ -5,10 +5,11 @@ import { CardCompact } from "@/components/card-compact";
 import { CommentCreateForm } from "@/features/comment/components/comment-create-form";
 import { CommentDeleteButton } from "./comment-delete-button";
 import { CommentWithMetadata } from "@/features/comment/types";
-import { Button } from "@/components/ui/button";
 import { getComments } from "@/features/comment/queries/get-comments";
 import { PaginationData } from "@/types/pagination";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import { useInView } from "react-intersection-observer";
+import { useEffect } from "react";
 
 type CommentsProps = {
   ticketId: string;
@@ -18,7 +19,7 @@ type CommentsProps = {
 const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
   const queryKey = ["comments", ticketId];
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey,
       queryFn: ({ pageParam }) => getComments(ticketId, pageParam),
@@ -38,13 +39,19 @@ const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
 
   const comments = data.pages.flatMap((page) => page.list);
 
-  const handleMore = () => fetchNextPage();
-
   const queryClient = useQueryClient();
 
   const handleDeleteComment = () => queryClient.invalidateQueries({ queryKey });
 
   const handleCreateComment = () => queryClient.invalidateQueries({ queryKey });
+
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   return (
     <>
@@ -79,15 +86,9 @@ const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
         ))}
       </div>
 
-      <div className="flex flex-col justify-center ml-8">
-        {hasNextPage && (
-          <Button
-            variant="ghost"
-            onClick={handleMore}
-            disabled={isFetchingNextPage}
-          >
-            More
-          </Button>
+      <div ref={ref}>
+        {!hasNextPage && (
+          <p className="text-right text-xs italic">No more comments</p>
         )}
       </div>
     </>
