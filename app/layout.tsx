@@ -7,8 +7,6 @@ import { Sidebar } from "@/app/_nav/sidebar/components/sidebar";
 import { ReactQueryProvider } from "@/app/_providers/react-query/react-query-provider";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
-import { WeglotProvider } from "@/components/weglot-provider";
-import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,19 +30,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <Script
-          src="https://cdn.weglot.com/weglot.min.js"
-          strategy="beforeInteractive"
-        />
-      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <NuqsAdapter>
           <ThemeProvider>
             <ReactQueryProvider>
-              <WeglotProvider />
               <Header />
               <div className="flex h-screen overflow-hidden border-collapse">
                 <Sidebar />
